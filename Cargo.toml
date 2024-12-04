@@ -15,13 +15,7 @@ documentation = "https://docs.rs/nostd"
 memchr = { version = "2", default-features = false, optional = true }
 
 [features]
-default = [
-  "alloc",
-  "io",
-]
+default = ["alloc"]
 alloc = ["memchr?/alloc"]
 io = ["memchr"]
-std = [
-  "alloc",
-  "memchr?/std",
-]
+std = ["alloc"]
