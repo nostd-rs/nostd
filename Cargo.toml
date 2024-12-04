@@ -11,9 +11,6 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/conr2d/nostd.git"
 documentation = "https://docs.rs/nostd"
 
-[package.metadata.docs.rs]
-features = ["std"]
-
 [dependencies]
 memchr = { version = "2", default-features = false, optional = true }
 
