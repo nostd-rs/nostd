@@ -12,14 +12,6 @@
 #[cfg(feature = "alloc")]
 extern crate alloc as alloc_;
 
-#[cfg(feature = "alloc")]
-pub use alloc_::*;
-
-pub use core::*;
-
-#[cfg(feature = "alloc")]
-pub use alloc_::{alloc, borrow, ffi, fmt, slice, str, sync, task};
-
 /// The nostd prelude
 ///
 /// This module is intended for users of nostd where linking to std is not possible or desirable.
@@ -33,6 +25,38 @@ pub mod prelude {
         vec,
         vec::Vec,
     };
+}
+
+#[cfg(feature = "alloc")]
+pub use alloc_::*;
+pub use core::*;
+
+macro_rules! merge_exports {
+    ($module:ident) => {
+        pub mod $module {
+            #[cfg(feature = "alloc")]
+            pub use alloc_::$module::*;
+            #[allow(unused_imports)]
+            pub use core::$module::*;
+        }
+    };
+}
+
+merge_exports!(alloc);
+merge_exports!(borrow);
+merge_exports!(fmt);
+merge_exports!(slice);
+merge_exports!(str);
+merge_exports!(sync);
+merge_exports!(task);
+
+pub mod ffi {
+    #[cfg(feature = "alloc")]
+    pub use alloc_::ffi::*;
+    #[allow(unused_imports)]
+    pub use core::ffi::*;
+    // Suppress ambiguous_glob_reexports
+    pub mod c_str {}
 }
 
 #[cfg(all(feature = "io", not(feature = "std")))]
