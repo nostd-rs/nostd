@@ -1,0 +1,27 @@
+[package]
+name = "nostd"
+version = "0.1.0"
+description = "Missing std types for no_std development"
+authors = [
+  "Jeeyong Um <conr2d@proton.me>",
+  "Jungyong Um <ian.jungyong.um@gmail.com>",
+]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/conr2d/nostd.git"
+documentation = "https://docs.rs/nostd"
+
+[dependencies]
+memchr = { version = "2", default-features = false, optional = true }
+
+[features]
+default = [
+  "alloc",
+  "io",
+]
+alloc = ["memchr?/alloc"]
+io = ["memchr"]
+std = [
+  "alloc",
+  "memchr?/std",
+]
