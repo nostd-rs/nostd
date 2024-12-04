@@ -12,6 +12,7 @@ repository = "https://github.com/conr2d/nostd.git"
 documentation = "https://docs.rs/nostd"
 
 [dependencies]
+hashbrown = { version = "0.15", optional = true }
 memchr = { version = "2", default-features = false, optional = true }
 
 [features]
