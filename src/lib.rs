@@ -59,6 +59,16 @@ pub mod ffi {
     pub mod c_str {}
 }
 
+#[cfg(feature = "alloc")]
+pub mod collections {
+    pub use alloc_::collections::*;
+
+    #[cfg(all(feature = "hashbrown", not(feature = "std")))]
+    pub use hashbrown::{hash_map, hash_set, HashMap, HashSet};
+    #[cfg(feature = "std")]
+    pub use std::collections::{hash_map, hash_set, HashMap, HashSet};
+}
+
 #[cfg(all(feature = "io", not(feature = "std")))]
 pub mod io;
 #[cfg(feature = "std")]
