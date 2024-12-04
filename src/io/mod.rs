@@ -7,6 +7,8 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+//! Traits, helpers, and type definitions for core I/O functionality.
+
 mod buffered;
 mod cursor;
 mod error;
@@ -19,3 +21,16 @@ pub use cursor::Cursor;
 pub use error::{Error, ErrorKind, Result};
 pub use traits::{BufRead, Bytes, Chain, Read, Seek, SeekFrom, Take, Write};
 pub use util::copy;
+
+/// The I/O Prelude.
+///
+/// The purpose of this module is to alleviate imports of many common I/O traits
+/// by adding a glob import to the top of I/O heavy modules:
+///
+/// ```
+/// # #![allow(unused_imports)]
+/// use nostd::io::prelude::*;
+/// ```
+pub mod prelude {
+    pub use super::{BufRead, Read, Seek, Write};
+}

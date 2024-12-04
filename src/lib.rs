@@ -20,6 +20,9 @@ pub use core::*;
 #[cfg(feature = "alloc")]
 pub use alloc_::{alloc, borrow, ffi, fmt, slice, str, sync, task};
 
+/// The nostd prelude
+///
+/// This module is intended for users of nostd where linking to std is not possible or desirable.
 pub mod prelude {
     #[cfg(feature = "alloc")]
     pub use alloc_::{
