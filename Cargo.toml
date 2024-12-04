@@ -1,6 +1,6 @@
 [package]
 name = "nostd"
-version = "0.1.0"
+version = "0.1.1"
 description = "Missing std types for no_std development"
 authors = [
   "Jeeyong Um <conr2d@proton.me>",
