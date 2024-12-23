@@ -1,13 +1,44 @@
 # nostd
 
-`nostd` is a lightweight Rust crate to simplify `no_std` development by bridging the gap with `std`.
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/nostd-rs/nostd/ci.yml?event=push)](https://github.com/nostd-rs/nostd)
+[![Crates.io Version](https://img.shields.io/crates/v/nostd)](https://crates.io/crates/nostd)
+[![GitHub License](https://img.shields.io/badge/license-MIT%2FApache2-blue)](#LICENSE)
 
-It provides:
+`nostd` provides essential `std`-like types in `no_std` environment.
 
-* Missing Prelude Types: Re-exports types include in the `std` prelude but missing from `core`, making `no_std` development smoother.
-* IO Module Emulation: Re-exports [`core2`] providing a `std::io`-like API for `no_std` environments.
+This crate re-exports types from the `alloc` and `core` crates under the familiar `std` path while also offering alternative implementations for types missing in those crates.
 
-[`core2`]: https://docs.rs/crate/core2/latest
+`nostd` aims to port code written for `std` to `no_std` with minimal changes, often requiring only a replacement of `std::` with `nostd::`.
+
+## Features
+
+- `std::prelude` emulation
+```rs
+use nostd::prelude::*;
+// Now you can access `Box`, `String`, `Vec`, etc.
+```
+- `std::io` emulation by [`core2`] (feature: `io`)
+- `std::collections::hash_(map|set)` emulation by [`hashbrown`] (feature: `hashbrown`)
+
+[`core2`]: https://crates.io/crates/core2
+[`hashbrown`]: https://crates.io/crates/hashbrown
+
+## Usage
+
+Add this to your `Cargo.toml`:
+
+```toml
+[dependencies]
+nostd = "0.1"
+```
+
+By default, `nostd` is intended to be used in `no_std` environment. To use it in `std` environment, enable the `std` feature:
+
+```toml
+[features]
+default = ["std"]
+std = ["nostd/std"]
+```
 
 ## Contributing
 
