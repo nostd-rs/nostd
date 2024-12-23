@@ -1,6 +1,6 @@
 [package]
 name = "nostd"
-version = "0.1.1"
+version = "0.1.2"
 description = "Missing std types for no_std development"
 authors = [
   "Jeeyong Um <conr2d@proton.me>",
@@ -8,8 +8,11 @@ authors = [
 ]
 edition = "2021"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/conr2d/nostd.git"
+repository = "https://github.com/nostd-rs/nostd.git"
 documentation = "https://docs.rs/nostd"
+keywords = ["no_std"]
+categories = ["no-std"]
+exclude = [".github"]
 
 [dependencies]
 hashbrown = { version = "0.15", optional = true }
