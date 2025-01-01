@@ -20,6 +20,6 @@ memchr = { version = "2", default-features = false, optional = true }
 
 [features]
 default = ["alloc"]
+std = ["alloc"]
 alloc = ["memchr?/alloc"]
 io = ["memchr"]
-std = ["alloc"]
