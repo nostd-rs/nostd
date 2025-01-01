@@ -1,4 +1,5 @@
-// Copyright (c) Jeeyong Um <conr2d@proton.me>, Jungyong Um <ian.jungyong.um@gmail.com>
+// Copyright (c) Jeeyong Um <conr2d@proton.me>
+//               Jungyong Um <ian.jungyong.um@gmail.com>
 // SPDX-License-Identifier: MIT OR Apache-2.0
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
@@ -65,11 +66,11 @@ pub mod collections {
 
     #[cfg(all(feature = "hashbrown", not(feature = "std")))]
     pub use hashbrown::{hash_map, hash_set, HashMap, HashSet};
-    #[cfg(feature = "std")]
+    #[cfg(all(feature = "hashbrown", feature = "std"))]
     pub use std::collections::{hash_map, hash_set, HashMap, HashSet};
 }
 
 #[cfg(all(feature = "io", not(feature = "std")))]
 pub mod io;
-#[cfg(feature = "std")]
+#[cfg(all(feature = "io", feature = "std"))]
 pub use std::io;
