@@ -29,8 +29,7 @@
 //! // Now you can access `Box`, `String`, `Vec`, etc.
 //! ```
 //! - `std::io` emulation by [`core2`] (feature: `io`)
-//! - `std::collections::hash_(map|set)` emulation by [`hashbrown`]
-//! (feature: `hashbrown`)
+//! - `std::collections::hash_(map|set)` emulation by [`hashbrown`] (feature: `hashbrown`)
 //!
 //! [`core2`]: https://crates.io/crates/core2
 //! [`hashbrown`]: https://crates.io/crates/hashbrown

@@ -26,7 +26,7 @@ use nostd::prelude::*;
 ```
 - `std::io` emulation by [`core2`] (feature: `io`)
 - `std::collections::hash_(map|set)` emulation by [`hashbrown`]
-(feature: `hashbrown`)
+  (feature: `hashbrown`)
 
 [`core2`]: https://crates.io/crates/core2
 [`hashbrown`]: https://crates.io/crates/hashbrown
