@@ -13,9 +13,10 @@ types not available in those crates.
 `nostd` aims to help port code written for `std` to `no_std` with minimal
 changes, often requiring only a replacement of `std::` with `nostd::`.
 
-However, please note that a successful build does not guarantee that the
-code will work as expected. Exercise caution and thoroughly test your
-application before using it in production.
+> [!WARNING]
+> A successful build does not guarantee that the code will work as expected.
+> Exercise caution and thoroughly test your application before using it in
+> production.
 
 ## Features
 
