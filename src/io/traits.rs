@@ -53,7 +53,10 @@ where
     F: FnMut(&R) -> usize,
 {
     let start_len = buf.len();
-    let mut g = Guard { len: buf.len(), buf };
+    let mut g = Guard {
+        len: buf.len(),
+        buf,
+    };
     loop {
         if g.len == g.buf.len() {
             unsafe {
@@ -81,8 +84,8 @@ where
                 // is called via read_to_string.
                 assert!(n <= buf.len());
                 g.len += n;
-            },
-            Err(ref e) if e.kind() == ErrorKind::Interrupted => {},
+            }
+            Err(ref e) if e.kind() == ErrorKind::Interrupted => {}
             Err(e) => return Err(e),
         }
     }
@@ -361,13 +364,16 @@ pub trait Read {
                 Ok(n) => {
                     let tmp = buf;
                     buf = &mut tmp[n..];
-                },
-                Err(ref e) if e.kind() == ErrorKind::Interrupted => {},
+                }
+                Err(ref e) if e.kind() == ErrorKind::Interrupted => {}
                 Err(e) => return Err(e),
             }
         }
         if !buf.is_empty() {
-            Err(Error::new(ErrorKind::UnexpectedEof, "failed to fill whole buffer"))
+            Err(Error::new(
+                ErrorKind::UnexpectedEof,
+                "failed to fill whole buffer",
+            ))
         } else {
             Ok(())
         }
@@ -484,7 +490,11 @@ pub trait Read {
     where
         Self: Sized,
     {
-        Chain { first: self, second: next, done_first: false }
+        Chain {
+            first: self,
+            second: next,
+            done_first: false,
+        }
     }
 
     /// Creates an adaptor which will read at most `limit` bytes from it.
@@ -716,10 +726,13 @@ pub trait Write {
         while !buf.is_empty() {
             match self.write(buf) {
                 Ok(0) => {
-                    return Err(Error::new(ErrorKind::WriteZero, "failed to write whole buffer"));
-                },
+                    return Err(Error::new(
+                        ErrorKind::WriteZero,
+                        "failed to write whole buffer",
+                    ));
+                }
                 Ok(n) => buf = &buf[n..],
-                Err(ref e) if e.kind() == ErrorKind::Interrupted => {},
+                Err(ref e) if e.kind() == ErrorKind::Interrupted => {}
                 Err(e) => return Err(e),
             }
         }
@@ -775,12 +788,15 @@ pub trait Write {
                     Err(e) => {
                         self.error = Err(e);
                         Err(fmt::Error)
-                    },
+                    }
                 }
             }
         }
 
-        let mut output = Adaptor { inner: self, error: Ok(()) };
+        let mut output = Adaptor {
+            inner: self,
+            error: Ok(()),
+        };
         match fmt::write(&mut output, fmt) {
             Ok(()) => Ok(()),
             Err(..) => {
@@ -790,7 +806,7 @@ pub trait Write {
                 } else {
                     Err(Error::new(ErrorKind::Other, "formatter error"))
                 }
-            },
+            }
         }
     }
 
@@ -1146,7 +1162,7 @@ impl<T: BufRead, U: BufRead> BufRead for Chain<T, U> {
             match self.first.fill_buf()? {
                 [] => {
                     self.done_first = true;
-                },
+                }
                 buf => return Ok(buf),
             }
         }

@@ -206,7 +206,7 @@ where
             SeekFrom::Start(n) => {
                 self.pos = n;
                 return Ok(n);
-            },
+            }
             SeekFrom::End(n) => (self.inner.as_ref().len() as u64, n),
             SeekFrom::Current(n) => (self.pos, n),
         };
@@ -219,7 +219,7 @@ where
             Some(n) => {
                 self.pos = n;
                 Ok(self.pos)
-            },
+            }
             None => Err(Error::new(
                 ErrorKind::InvalidInput,
                 "invalid seek to a negative or overflowing position",
