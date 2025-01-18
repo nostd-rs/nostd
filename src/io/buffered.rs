@@ -75,7 +75,12 @@ impl<R: Read, const S: usize> BufReader<R, S> {
     /// }
     /// ```
     pub fn new(inner: R) -> BufReader<R, S> {
-        BufReader { inner, buf: [0; S], pos: 0, cap: 0 }
+        BufReader {
+            inner,
+            buf: [0; S],
+            pos: 0,
+            cap: 0,
+        }
     }
 }
 
@@ -414,7 +419,12 @@ where
     /// let mut buffer = BufWriter::new(TcpStream::connect("127.0.0.1:34254").unwrap());
     /// ```
     pub fn new(inner: W) -> BufWriter<W, S> {
-        BufWriter { inner: Some(inner), buf: [0; S], len: 0, panicked: false }
+        BufWriter {
+            inner: Some(inner),
+            buf: [0; S],
+            len: 0,
+            panicked: false,
+        }
     }
 
     /// Send data in our local buffer into the inner writer, looping as
@@ -477,9 +487,9 @@ where
                         ErrorKind::WriteZero,
                         "failed to write the buffered data",
                     ));
-                },
+                }
                 Ok(n) => guard.consume(n),
-                Err(ref e) if e.kind() == ErrorKind::Interrupted => {},
+                Err(ref e) if e.kind() == ErrorKind::Interrupted => {}
                 Err(e) => return Err(e),
             }
         }
@@ -814,7 +824,7 @@ impl<W: Write, const S: usize> Write for LineWriterShim<'_, W, S> {
             None => {
                 self.flush_if_completed_line()?;
                 return self.buffer.write(buf);
-            },
+            }
             // Otherwise, arrange for the lines to be written directly to the
             // inner writer.
             Some(newline_idx) => newline_idx + 1,
@@ -894,7 +904,7 @@ impl<W: Write, const S: usize> Write for LineWriterShim<'_, W, S> {
             None => {
                 self.flush_if_completed_line()?;
                 self.buffer.write_all(buf)
-            },
+            }
             Some(newline_idx) => {
                 let (lines, tail) = buf.split_at(newline_idx + 1);
 
@@ -912,7 +922,7 @@ impl<W: Write, const S: usize> Write for LineWriterShim<'_, W, S> {
                 }
 
                 self.buffer.write_all(tail)
-            },
+            }
         }
     }
 }
@@ -999,7 +1009,9 @@ impl<W: Write, const S: usize> LineWriter<W, S> {
     /// }
     /// ```
     pub fn new(inner: W) -> LineWriter<W, S> {
-        LineWriter { inner: BufWriter::new(inner) }
+        LineWriter {
+            inner: BufWriter::new(inner),
+        }
     }
 
     /// Gets a reference to the underlying writer.

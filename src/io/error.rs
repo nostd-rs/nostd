@@ -254,7 +254,9 @@ impl From<ErrorKind> for Error {
     /// ```
     #[inline]
     fn from(kind: ErrorKind) -> Error {
-        Error { repr: Repr::Simple(kind) }
+        Error {
+            repr: Repr::Simple(kind),
+        }
     }
 }
 
@@ -303,7 +305,9 @@ impl Error {
     }
 
     fn _new(kind: ErrorKind, error: &'static str) -> Error {
-        Error { repr: Repr::Custom(Custom { kind, error }) }
+        Error {
+            repr: Repr::Custom(Custom { kind, error }),
+        }
     }
 
     /// Returns a reference to the inner error wrapped by this error (if any).
