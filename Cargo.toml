@@ -21,6 +21,9 @@ features = ["hashbrown", "io"]
 hashbrown = { version = "0.15", optional = true }
 memchr = { version = "2", default-features = false, optional = true }
 
+[dev-dependencies]
+nostd = { path = ".", features = ["io"] }
+
 [features]
 default = ["alloc"]
 std = ["alloc"]
