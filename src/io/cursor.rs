@@ -7,6 +7,12 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
+#[cfg(test)]
+mod tests;
+
+#[cfg(feature = "alloc")]
+use crate::prelude::*;
+
 use super::{BufRead, Error, ErrorKind, Read, Result, Seek, SeekFrom, Write};
 use core::cmp;
 
@@ -268,10 +274,129 @@ fn slice_write(pos_mut: &mut u64, slice: &mut [u8], buf: &[u8]) -> Result<usize>
     Ok(amt)
 }
 
+/// Reserves the required space, and pads the vec with 0s if necessary.
+#[cfg(feature = "alloc")]
+fn reserve_and_pad(pos_mut: &mut u64, vec: &mut Vec<u8>, buf_len: usize) -> Result<usize> {
+    let pos: usize = (*pos_mut).try_into().map_err(|_| {
+        Error::new(
+            ErrorKind::InvalidInput,
+            "cursor position exceeds maximum possible vector length",
+        )
+    })?;
+
+    // For safety reasons, we don't want these numbers to overflow
+    // otherwise our allocation won't be enough
+    let desired_cap = pos.saturating_add(buf_len);
+    if desired_cap > vec.capacity() {
+        // We want our vec's total capacity
+        // to have room for (pos+buf_len) bytes. Reserve allocates
+        // based on additional elements from the length, so we need to
+        // reserve the difference
+        vec.reserve(desired_cap - vec.len());
+    }
+    // Pad if pos is above the current len.
+    if pos > vec.len() {
+        let diff = pos - vec.len();
+        // Unfortunately, `resize()` would suffice but the optimiser does not
+        // realise the `reserve` it does can be eliminated. So we do it manually
+        // to eliminate that extra branch
+        let spare = vec.spare_capacity_mut();
+        debug_assert!(spare.len() >= diff);
+        // Safety: we have allocated enough capacity for this.
+        // And we are only writing, not reading
+        unsafe {
+            spare
+                .get_unchecked_mut(..diff)
+                .fill(core::mem::MaybeUninit::new(0));
+            vec.set_len(pos);
+        }
+    }
+
+    Ok(pos)
+}
+
+/// Writes the slice to the vec without allocating
+/// # Safety: vec must have buf.len() spare capacity
+#[cfg(feature = "alloc")]
+unsafe fn vec_write_unchecked(pos: usize, vec: &mut Vec<u8>, buf: &[u8]) -> usize {
+    debug_assert!(vec.capacity() >= pos + buf.len());
+    unsafe { vec.as_mut_ptr().add(pos).copy_from(buf.as_ptr(), buf.len()) };
+    pos + buf.len()
+}
+
+#[cfg(feature = "alloc")]
+fn vec_write(pos_mut: &mut u64, vec: &mut Vec<u8>, buf: &[u8]) -> Result<usize> {
+    let buf_len = buf.len();
+    let mut pos = reserve_and_pad(pos_mut, vec, buf_len)?;
+
+    // Write the buf then progress the vec forward if necessary
+    // Safety: we have ensured that the capacity is available
+    // and that all bytes get written up to pos
+    unsafe {
+        pos = vec_write_unchecked(pos, vec, buf);
+        if pos > vec.len() {
+            vec.set_len(pos);
+        }
+    };
+
+    // Bump us forward
+    *pos_mut += buf_len as u64;
+    Ok(buf_len)
+}
+
 impl Write for Cursor<&mut [u8]> {
     #[inline]
     fn write(&mut self, buf: &[u8]) -> Result<usize> {
         slice_write(&mut self.pos, self.inner, buf)
+    }
+
+    #[inline]
+    fn flush(&mut self) -> Result<()> {
+        Ok(())
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl Write for Cursor<&mut Vec<u8>> {
+    fn write(&mut self, buf: &[u8]) -> Result<usize> {
+        vec_write(&mut self.pos, self.inner, buf)
+    }
+
+    #[inline]
+    fn flush(&mut self) -> Result<()> {
+        Ok(())
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl Write for Cursor<Vec<u8>> {
+    fn write(&mut self, buf: &[u8]) -> Result<usize> {
+        vec_write(&mut self.pos, &mut self.inner, buf)
+    }
+
+    #[inline]
+    fn flush(&mut self) -> Result<()> {
+        Ok(())
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl Write for Cursor<Box<[u8]>> {
+    #[inline]
+    fn write(&mut self, buf: &[u8]) -> Result<usize> {
+        slice_write(&mut self.pos, &mut self.inner, buf)
+    }
+
+    #[inline]
+    fn flush(&mut self) -> Result<()> {
+        Ok(())
+    }
+}
+
+impl<const N: usize> Write for Cursor<[u8; N]> {
+    #[inline]
+    fn write(&mut self, buf: &[u8]) -> Result<usize> {
+        slice_write(&mut self.pos, &mut self.inner, buf)
     }
 
     #[inline]

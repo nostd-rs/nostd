@@ -115,7 +115,7 @@ pub mod collections {
     pub use std::collections::{hash_map, hash_set, HashMap, HashSet};
 }
 
-#[cfg(all(feature = "io", not(feature = "std")))]
+#[cfg(all(feature = "io", any(not(feature = "std"), test)))]
 pub mod io;
-#[cfg(all(feature = "io", feature = "std"))]
+#[cfg(all(feature = "io", feature = "std", not(test)))]
 pub use std::io;

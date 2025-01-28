@@ -300,11 +300,11 @@ impl Error {
     /// // errors can also be created from other errors
     /// let custom_error2 = Error::new(ErrorKind::Interrupted, custom_error.into_inner().unwrap());
     /// ```
-    pub fn new(kind: ErrorKind, error: &'static str) -> Error {
+    pub const fn new(kind: ErrorKind, error: &'static str) -> Error {
         Self::_new(kind, error)
     }
 
-    fn _new(kind: ErrorKind, error: &'static str) -> Error {
+    const fn _new(kind: ErrorKind, error: &'static str) -> Error {
         Error {
             repr: Repr::Custom(Custom { kind, error }),
         }
