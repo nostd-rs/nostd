@@ -1,4 +1,4 @@
-// Copyright (c) Jeeyong Um <conr2d@proton.me>
+// Copyright (C) Jeeyong Um <conr2d@proton.me>
 //               Jungyong Um <ian.jungyong.um@gmail.com>
 // SPDX-License-Identifier: MIT OR Apache-2.0
 //

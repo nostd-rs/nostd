@@ -1,4 +1,4 @@
-// Copyright (c) Brendan Molloy <brendan@bbqsrc.net>
+// Copyright (C) Brendan Molloy <brendan@bbqsrc.net>
 // SPDX-License-Identifier: MIT OR Apache-2.0
 //
 // Licensed under the Apache License, Version 2.0 <LICENSE-APACHE or
