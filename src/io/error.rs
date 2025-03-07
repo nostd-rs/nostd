@@ -304,6 +304,27 @@ impl Error {
         Self::_new(kind, error)
     }
 
+    /// Creates a new I/O error from an arbitrary error payload.
+    ///
+    /// This function is used to generically create I/O errors which do not
+    /// originate from the OS itself. It is a shortcut for [`Error::new`]
+    /// with [`ErrorKind::Other`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use nostd::io::Error;
+    ///
+    /// // errors can be created from strings
+    /// let custom_error = Error::other("oh no!");
+    ///
+    /// // errors can also be created from other errors
+    /// // let custom_error2 = Error::other(custom_error);
+    /// ```
+    pub const fn other(error: &'static str) -> Error {
+        Self::_new(ErrorKind::Other, error)
+    }
+
     const fn _new(kind: ErrorKind, error: &'static str) -> Error {
         Error {
             repr: Repr::Custom(Custom { kind, error }),
