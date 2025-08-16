@@ -11,7 +11,7 @@ use super::error::{Error, ErrorKind, Result};
 use core::{cmp, fmt, slice};
 
 #[cfg(feature = "alloc")]
-pub use __alloc::vec::Vec;
+pub use crate::vec::Vec;
 
 #[cfg(feature = "alloc")]
 struct Guard<'a> {

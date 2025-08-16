@@ -56,14 +56,14 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 #[cfg(feature = "alloc")]
-extern crate alloc as __alloc;
+extern crate alloc as alloc_crate;
 
 /// The nostd prelude
 ///
 /// This module is intended for users of nostd where linking to std is not possible or desirable.
 pub mod prelude {
     #[cfg(feature = "alloc")]
-    pub use __alloc::{
+    pub use alloc_crate::{
         borrow::ToOwned,
         boxed::Box,
         format,
@@ -73,41 +73,35 @@ pub mod prelude {
     };
 }
 
+#[macro_use]
+mod macros;
+
 #[cfg(feature = "alloc")]
-pub use __alloc::*;
+pub use alloc_crate::*;
 pub use core::*;
 
-macro_rules! merge_exports {
-    ($module:ident) => {
-        pub mod $module {
-            #[cfg(feature = "alloc")]
-            pub use __alloc::$module::*;
-            #[allow(unused_imports)]
-            pub use core::$module::*;
-        }
-    };
-}
+export!(alloc);
+export!(borrow);
+export!(fmt);
+export!(slice);
+export!(str);
+export!(sync);
+export!(task);
 
-merge_exports!(alloc);
-merge_exports!(borrow);
-merge_exports!(fmt);
-merge_exports!(slice);
-merge_exports!(str);
-merge_exports!(sync);
-merge_exports!(task);
+pub mod bstr {}
 
 pub mod ffi {
-    #[cfg(feature = "alloc")]
-    pub use __alloc::ffi::*;
-    #[allow(unused_imports)]
-    pub use core::ffi::*;
-    // Suppress ambiguous_glob_reexports
-    pub mod c_str {}
+    import!(ffi);
+
+    pub mod c_str {
+        #[rustversion::since(1.88)]
+        import!(ffi::c_str);
+    }
 }
 
 #[cfg(feature = "alloc")]
 pub mod collections {
-    pub use __alloc::collections::*;
+    pub use alloc_crate::collections::*;
 
     #[cfg(all(feature = "hashbrown", not(feature = "std")))]
     pub use hashbrown::{hash_map, hash_set, HashMap, HashSet};
