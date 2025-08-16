@@ -88,8 +88,7 @@ import!(str);
 import!(sync);
 import!(task);
 
-pub mod bstr {
-}
+pub mod bstr {}
 
 pub mod ffi {
     export!(ffi);
