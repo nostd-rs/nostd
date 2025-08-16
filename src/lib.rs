@@ -73,36 +73,31 @@ pub mod prelude {
     };
 }
 
+#[macro_use]
+mod macros;
+
 #[cfg(feature = "alloc")]
 pub use alloc_crate::*;
 pub use core::*;
 
-macro_rules! merge_exports {
-    ($module:ident) => {
-        pub mod $module {
-            #[cfg(feature = "alloc")]
-            pub use alloc_crate::$module::*;
-            #[allow(unused_imports)]
-            pub use core::$module::*;
-        }
-    };
+import!(alloc);
+import!(borrow);
+import!(fmt);
+import!(slice);
+import!(str);
+import!(sync);
+import!(task);
+
+pub mod bstr {
 }
 
-merge_exports!(alloc);
-merge_exports!(borrow);
-merge_exports!(fmt);
-merge_exports!(slice);
-merge_exports!(str);
-merge_exports!(sync);
-merge_exports!(task);
-
 pub mod ffi {
-    #[cfg(feature = "alloc")]
-    pub use alloc_crate::ffi::*;
-    #[allow(unused_imports)]
-    pub use core::ffi::*;
-    // Suppress ambiguous_glob_reexports
-    pub mod c_str {}
+    export!(ffi);
+
+    pub mod c_str {
+        #[rustversion::since(1.88)]
+        export!(ffi::c_str);
+    }
 }
 
 #[cfg(feature = "alloc")]
