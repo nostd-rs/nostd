@@ -9,19 +9,19 @@
 // except according to those terms.
 
 #[macro_export]
-macro_rules! import {
+macro_rules! export {
     ($mod:ident) => {
-        import!($mod, $mod);
+        export!($mod, $mod);
     };
     ($mod:ident, $($path:ident)::*) => {
         pub mod $mod {
-            export!($($path)*);
+            import!($($path)*);
         }
     };
 }
 
 #[macro_export]
-macro_rules! export {
+macro_rules! import {
     ($($path:ident)::*) => {
         #[cfg(feature = "alloc")]
         pub use alloc_crate::$($path::)**;

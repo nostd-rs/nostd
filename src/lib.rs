@@ -80,22 +80,22 @@ mod macros;
 pub use alloc_crate::*;
 pub use core::*;
 
-import!(alloc);
-import!(borrow);
-import!(fmt);
-import!(slice);
-import!(str);
-import!(sync);
-import!(task);
+export!(alloc);
+export!(borrow);
+export!(fmt);
+export!(slice);
+export!(str);
+export!(sync);
+export!(task);
 
 pub mod bstr {}
 
 pub mod ffi {
-    export!(ffi);
+    import!(ffi);
 
     pub mod c_str {
         #[rustversion::since(1.88)]
-        export!(ffi::c_str);
+        import!(ffi::c_str);
     }
 }
 
