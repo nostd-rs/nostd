@@ -56,14 +56,14 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 #[cfg(feature = "alloc")]
-extern crate alloc as __alloc;
+extern crate alloc as alloc_crate;
 
 /// The nostd prelude
 ///
 /// This module is intended for users of nostd where linking to std is not possible or desirable.
 pub mod prelude {
     #[cfg(feature = "alloc")]
-    pub use __alloc::{
+    pub use alloc_crate::{
         borrow::ToOwned,
         boxed::Box,
         format,
@@ -74,14 +74,14 @@ pub mod prelude {
 }
 
 #[cfg(feature = "alloc")]
-pub use __alloc::*;
+pub use alloc_crate::*;
 pub use core::*;
 
 macro_rules! merge_exports {
     ($module:ident) => {
         pub mod $module {
             #[cfg(feature = "alloc")]
-            pub use __alloc::$module::*;
+            pub use alloc_crate::$module::*;
             #[allow(unused_imports)]
             pub use core::$module::*;
         }
@@ -98,7 +98,7 @@ merge_exports!(task);
 
 pub mod ffi {
     #[cfg(feature = "alloc")]
-    pub use __alloc::ffi::*;
+    pub use alloc_crate::ffi::*;
     #[allow(unused_imports)]
     pub use core::ffi::*;
     // Suppress ambiguous_glob_reexports
@@ -107,7 +107,7 @@ pub mod ffi {
 
 #[cfg(feature = "alloc")]
 pub mod collections {
-    pub use __alloc::collections::*;
+    pub use alloc_crate::collections::*;
 
     #[cfg(all(feature = "hashbrown", not(feature = "std")))]
     pub use hashbrown::{hash_map, hash_set, HashMap, HashSet};
