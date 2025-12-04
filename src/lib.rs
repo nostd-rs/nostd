@@ -99,6 +99,8 @@ pub mod ffi {
     }
 }
 
+pub mod wtf8 {}
+
 #[cfg(feature = "alloc")]
 pub mod collections {
     pub use alloc_crate::collections::*;
